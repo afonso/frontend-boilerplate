@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+'use strict'
+
+const compression = require('compression');
+const express = require('express');
+const spdy = require('spdy');
+const app = express();
+
+if (!process.env.NODE_ENV) {
+  throw new Error('NODE_ENV is not set')
+}
+
+app.use(compression({ threshold: 0 }))
+app.use(express.static(`./dists/${process.env.NODE_ENV}`, {
+  maxage: '1d'
+}));
+
+const options = {
+  spdy: {
+    protocols: [ 'h2', 'spdy/3.1', 'http/1.1' ],
+    plain: true,
+    ssl: false,
+  }
+}
+
+spdy.createServer(options, app)
+    .listen(4000, (err) => {
+      if (err) {
+        throw new Error(err);
+      }
+      console.log('Listening on port: 4000.');
+    });
