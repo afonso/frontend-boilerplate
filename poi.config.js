@@ -1,3 +1,5 @@
+'use strict'
+
 const path = require('path')
 const pkg = require('./package')
 const env = process.env.NODE_ENV
@@ -27,7 +29,8 @@ module.exports = {
     })
   ],
   env: {
-    AUTH_API_URL: config.apis.auth
+    AUTH_API_URL: config.apis.auth,
+    BLOG_API_URL: config.apis.blog
   },
   webpack (config) {
     config.node = {
